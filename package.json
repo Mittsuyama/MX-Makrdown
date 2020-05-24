@@ -1,5 +1,6 @@
 {
   "private": true,
+  "main": "electron/main.js",
   "scripts": {
     "start": "umi dev",
     "build": "umi build",
@@ -20,13 +21,28 @@
     ]
   },
   "dependencies": {
+    "@iktakahiro/markdown-it-katex": "^3.1.0",
     "@umijs/preset-react": "1.x",
     "@umijs/test": "^3.2.2",
+    "codemirror": "^5.54.0",
+    "electron": "^9.0.0",
+    "highlight.js": "^10.0.3",
+    "katex": "^0.11.1",
     "lint-staged": "^10.0.7",
+    "markdown-it": "^11.0.0",
+    "markdown-it-container": "^2.0.0",
+    "markdown-it-mark": "^3.0.0",
+    "markdown-it-task-checkbox": "^1.0.6",
+    "markdown-it-texmath": "^0.6.7",
+    "markdown-it-underline": "^1.0.1",
     "prettier": "^1.19.1",
     "react": "^16.12.0",
+    "react-codemirror": "^1.0.0",
     "react-dom": "^16.12.0",
     "umi": "^3.2.2",
     "yorkie": "^2.0.0"
+  },
+  "devDependencies": {
+    "@types/react-codemirror": "^1.0.3"
   }
 }

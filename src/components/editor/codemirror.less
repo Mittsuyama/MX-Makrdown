@@ -1,0 +1,37 @@
+.CodeMirror {
+  position: relative;
+  height: 100%;
+
+  font-size: 16px;
+  color: #555;
+
+  .cm-header {
+    font-size: 20px;
+    color: #d94f8a;
+  }
+  .cm-strong {
+    color: #000;
+  }
+
+  [class|='cm-variable'] {
+    color: rgb(0, 85, 170);
+  }
+
+  .CodeMirror-dialog-bottom {
+    position: absolute;
+    width: 100%;
+    min-height: 35px;
+    left: 45px;
+    bottom: 0px;
+    padding-top: 5px;
+    font-size: 17px;
+    background-color: white;
+    z-index: 99;
+
+    input {
+      border: none;
+      outline: none;
+      width: 90%;
+    }
+  }
+}

@@ -1,10 +1,12 @@
 import React from 'react';
-import styles from './index.less';
+import Editor from '../components/editor';
 
-export default () => {
+import '@/styles/home.less';
+
+export default (props: any) => {
   return (
-    <div>
-      <h1 className={styles.title}>Page index</h1>
+    <div className="home-container">
+      <Editor />
     </div>
   );
 };
