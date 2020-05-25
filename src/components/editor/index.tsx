@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { connect } from 'umi';
 import Codemirror from 'codemirror';
 const { templeText } = require('@/utils/constant.js');
-const electron = window.require('electron');
+const { ipcRenderer } = window.require('electron');
 
 import './editor.less';
 import 'codemirror/lib/codemirror.css';
@@ -41,7 +42,7 @@ const md = require('markdown-it')({
   .use(require('markdown-it-mark'))
   .use(require('markdown-it-underline'));
 
-export default (props: any) => {
+const Editor = ({ dispatch }) => {
   const codeRef = useRef(null);
   const readerRef = useRef(null);
   const readerContainerRef = useRef(null);
@@ -49,10 +50,10 @@ export default (props: any) => {
   const [value, setValue] = useState(templeText);
   const [mousePosition, setMousePosition] = useState(0);
   const [scrollTop, setScrollTop] = useState(0);
+  const [maxScreen, setMaxScren] = useState(0);
 
   const options = {
     value,
-    lineNumbers: true,
     smartIndent: true,
     lineWrapping: true,
     keyMap: 'vim',
@@ -60,18 +61,46 @@ export default (props: any) => {
   };
 
   useEffect(() => {
+    dispatch({
+      type: 'status/update',
+      payload: {
+        name: /^\#\s(?<name>[^\n]+)/g.exec(templeText).groups.name,
+        font: templeText.length,
+      },
+    });
+  }, []);
+
+  useEffect(() => {
     if (codeRef !== null) {
       //@ts-ignore
       const codeMirror = Codemirror(codeRef.current, { ...options });
       setCodeMirror(codeMirror);
       codeMirror.on('change', () => {
-        setValue(codeMirror.getValue());
+        const value = codeMirror.getValue();
+        setValue(value);
+        // update status-bar
+        const { name } = /^\#\s(?<name>[^\n]+)/g.exec(value).groups;
+        const font = value.length;
+        dispatch({
+          type: 'status/update',
+          payload: {
+            name,
+            font,
+          },
+        });
       });
       codeMirror.on('scroll', () => {
         if (mousePosition === 0) {
           const { top, height } = codeMirror.getScrollInfo();
           setScrollTop(top / (height - window.innerHeight));
         }
+      });
+      codeMirror.on('cursorActivity', () => {
+        const { line, ch } = codeMirror.getCursor();
+        dispatch({
+          type: 'status/update',
+          payload: { cursor: { line, ch } },
+        });
       });
     }
   }, [codeRef]);
@@ -104,25 +133,42 @@ export default (props: any) => {
     }
   };
 
+  const handleHeadDoubleClick = (event: any) => {
+    if (maxScreen === 0) {
+      const _ = ipcRenderer.sendSync('window-operation', 'max-screen');
+      setMaxScren(1);
+    } else {
+      const _ = ipcRenderer.sendSync('window-operation', 'un-max-screen');
+      setMaxScren(0);
+    }
+  };
+
   return (
     <div className="editor-container">
-      <div
-        className="codemirror"
-        ref={codeRef}
-        onMouseEnter={() => setMousePosition(0)}
-      />
-      <div
-        className="reader"
-        ref={readerRef}
-        onMouseEnter={() => setMousePosition(1)}
-        onScroll={readerScroll}
-      >
+      <div className="editor-head" onDoubleClick={handleHeadDoubleClick}></div>
+      <div className="editor-main">
         <div
-          id="reader-container"
-          ref={readerContainerRef}
-          dangerouslySetInnerHTML={{ __html: md.render(value) }}
+          className="codemirror"
+          ref={codeRef}
+          onMouseEnter={() => setMousePosition(0)}
         />
+        <div
+          className="reader"
+          ref={readerRef}
+          onMouseEnter={() => setMousePosition(1)}
+          onScroll={readerScroll}
+        >
+          <div
+            id="reader-container"
+            ref={readerContainerRef}
+            dangerouslySetInnerHTML={{ __html: md.render(value) }}
+          />
+        </div>
       </div>
     </div>
   );
 };
+
+export default connect(({ status }) => ({
+  status,
+}))(Editor);
