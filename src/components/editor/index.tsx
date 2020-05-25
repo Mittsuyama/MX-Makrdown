@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Codemirror from 'codemirror';
 const { templeText } = require('@/utils/constant.js');
+const electron = window.require('electron');
 
 import './editor.less';
 import 'codemirror/lib/codemirror.css';
@@ -9,7 +10,7 @@ import 'codemirror/mode/markdown/markdown';
 import 'codemirror/keymap/vim';
 
 const highLightJs = require('highlight.js');
-import 'highlight.js/styles/github.css';
+import 'highlight.js/styles/atom-one-light.css';
 
 const md = require('markdown-it')({
   highlight: function(str: string, lang: string) {

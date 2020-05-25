@@ -17,18 +17,27 @@
     color: rgb(0, 85, 170);
   }
 
+  .CodeMirror-scroll {
+    box-sizing: border-box;
+  }
+
+  .CodeMirror-line {
+    padding: 0 10px;
+  }
+
   .CodeMirror-dialog-bottom {
     position: absolute;
     width: 100%;
     min-height: 35px;
-    left: 45px;
+    left: 43px;
     bottom: 0px;
-    padding-top: 5px;
+    padding-top: 7px;
     font-size: 17px;
     background-color: white;
     z-index: 99;
 
     input {
+      font-family: monospace;
       border: none;
       outline: none;
       width: 90%;

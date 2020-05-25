@@ -6,8 +6,11 @@ let mainWindow;
 const createWindow = () => {
   mainWindow = new BrowserWindow({
     width: 1400,
-    height: 1000,
-    titleBarStyle: 'hidden',
+    height: 800,
+    // titleBarStyle: 'hidden',
+    webPreferences: {
+      nodeIntegration: true,
+    },
   });
   mainWindow.loadURL('http://localhost:8000');
 
