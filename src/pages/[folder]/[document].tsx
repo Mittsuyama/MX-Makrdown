@@ -5,5 +5,11 @@ import StatusBar from '@/components/status-bar';
 import '@/styles/document.less';
 
 export default (props: any) => {
-  return <div>index</div>;
+  return (
+    <div className="document-container">
+      <Editor />
+      <StatusBar />
+    </div>
+  );
 };
+
