@@ -3,11 +3,14 @@ import Modal from '@/components/modal';
 
 import './menu.less';
 
-const { ipcRenderer } = window.require('electron');
+const { ipcRenderer, remote } = window.require('electron');
+import newMenu from './folder_menu.ts';
 
 export default () => {
-  const [folder, setFolder] = useState([]);
+  const [folderList, setFolderList] = useState([]);
+  const [selectFolder, setSelectFolder] = useState('');
   const [modal, setModal] = useState({
+    folder: 0,
     show: false,
     title: '新建文件夹',
     changeShow(isShow: bool) {
@@ -26,21 +29,65 @@ export default () => {
     { title: '废纸篓', name: 'trash', icon: 'shanchu' },
   ];
 
+  const fetch = () => {
+    const result = ipcRenderer.sendSync('getFolderList', {});
+    console.log(result);
+    setFolderList(result);
+    // setFolderList(ipcRenderer.sendSync('getFolderList', {}));
+  };
+
   useEffect(() => {
-    // fetch folder list
+    fetch();
   }, []);
 
-  const handleNewFolderModal = (params: any) => {
+  const handleNewFolderRequest = () => {
     setModal({
       ...modal,
       show: true,
       title: '新建文件夹',
     });
-    // const result = ipcRednerer.sendSync('newFolder', params);
   };
 
-  const handleNewFolder = (folder, name) => {
-    ipcRenderer.sendSync('newFolder', { folder, name });
+  const sendNewFolderRquest = name => {
+    ipcRenderer.sendSync('newFolder', { folder: selectFolder, name });
+    fetch();
+  };
+
+  const folderMenu = newMenu({
+    newFolder: handleNewFolderRequest,
+  });
+
+  const renderFolderList = (layer, info) => {
+    return (
+      <div className="folder-item" key={info.id}>
+        <div
+          className="title"
+          style={{ paddingLeft: layer * 25 }}
+          onContextMenu={e => {
+            e.preventDefault();
+            e.stopPropagation();
+            setSelectFolder(info.id);
+            folderMenu.popup({
+              window: remote.getCurrentWindow(),
+            });
+          }}
+        >
+          {info.children.length > 0 ? (
+            <i
+              className={`iconfont icon-${info.expand ? 'below' : 'right'}-s`}
+            />
+          ) : (
+            <span style={{ width: 18 }} />
+          )}
+          <span>{info.name}</span>
+        </div>
+        <div className="children">
+          {info.children.length > 0 &&
+            info.expand &&
+            info.children.map(item => renderFolderList(layer + 1, item))}
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -61,12 +108,18 @@ export default () => {
           <span className="title">文件夹</span>
           <i
             className="iconfont icon-tianjia"
-            onClick={() => handleNewFolderModal()}
+            onClick={() => {
+              setSelectFolder(0);
+              handleNewFolderRequest();
+            }}
           />
         </div>
-        main
+        <div className="folder-container">
+          {folderList.map(item => renderFolderList(1, item))}
+        </div>
       </div>
-      <Modal {...modal} ok={title => handleNewFolder(0, title)} />
+      <div className="bottom-box">同步</div>
+      <Modal {...modal} ok={title => sendNewFolderRquest(title)} />
     </div>
   );
 };

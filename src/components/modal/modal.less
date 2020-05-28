@@ -45,18 +45,27 @@
 
     .button {
       margin-left: 20px;
-      padding: 5px 13px;
+      padding: 7px 13px 5px 13px;
       border-radius: 5px;
       cursor: pointer;
+      transition-duration: 0.3s;
     }
 
     .ok {
-      background-color: #61afef;
+      background-color: #325aa0;
       color: white;
+
+      &:hover {
+        background-color: #325aa0dd;
+      }
     }
 
     .cancel {
       border: 1px solid #bbb;
+
+      &:hover {
+        background-color: #f0f0f0;
+      }
     }
   }
 }

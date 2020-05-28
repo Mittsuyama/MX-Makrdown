@@ -3,42 +3,98 @@ const path = require('path');
 const { dialog } = require('electron');
 const uuid = require('uuid');
 
-const getPath = pathname => path.join(__dirname, pathname);
+let folderMap = new Map();
+let pathMap = new Map();
 
-module.exports = {
-  getUserPreferences() {
-    let userPre = fs.readJsonSync(getPath('./user.json'));
-    const { pathname } = userPre;
-    if (pathname.length < 3 || !fs.pathExistsSync(pathname)) {
-      const workPath = dialog.showOpenDialogSync({
-        properties: ['openDirectory'],
-      })[0];
-      userPre = {
-        ...userPre,
-        pathname: workPath,
-      };
-      fs.writeJSONSync(getPath('./user.json'), userPre);
+// get user's preferesnce
+let userPre = fs.readJsonSync(path.join(__dirname, './user.json'));
+let { pathname: workPath } = userPre;
+if (workPath.length < 3 || !fs.pathExistsSync(workPath)) {
+  const pathString = dialog.showOpenDialogSync({
+    properties: ['openDirectory'],
+  })[0];
+  workPath = pathString;
+  userPre = {
+    ...userPre,
+    pathname: pathString,
+  };
+  fs.writeJSONSync(path.join(__dirname, './user.json'), userPre);
+}
+
+const getFilePath = pathname => {
+  return path.join(workPath, pathname);
+};
+
+const globalGetFolderList = (refresh = false) => {
+  if (refresh) {
+    folderMap.clear();
+    pathMap.clear();
+  }
+
+  const getFileLoop = nowPath => {
+    const info = fs.readJSONSync(getFilePath(`${nowPath}/_folder.json`));
+    const { id, folder } = info;
+
+    if (refresh) {
+      folderMap.set(id, folder);
+      pathMap.set(id, nowPath);
     }
-    return userPre;
-  },
-  getFolderList(workPath) {
-    fs.ensureDirSync(path.join(workPath, 'folder'));
-    const fileList = fs.readdirSync(path.join(workPath, 'folder'));
-    const folderList = fileList.filter(value => {
-      if (value.substr(0, 7) === 'folder-') {
-        return true;
+
+    const filesList = fs.readdirSync(getFilePath(nowPath));
+    let children = [];
+    filesList.forEach(itemId => {
+      if (/\w+\-\w+\-\w+\-\w+\-\w+/.test(itemId)) {
+        children.push(getFileLoop(`${nowPath}/${itemId}`));
       }
     });
-    console.log(folderList);
+
+    const result = {
+      ...info,
+      children,
+    };
+    return result;
+  };
+
+  let folderList = [];
+  fs.ensureDirSync(path.join(workPath, 'folder'));
+  const fileList = fs.readdirSync(getFilePath('folder'));
+  fileList.forEach(id => {
+    if (/\w+\-\w+\-\w+\-\w+\-\w+/.test(id)) {
+      folderList.push(getFileLoop(`folder/${id}`));
+    }
+  });
+  return folderList;
+};
+
+// get folder list
+let folderList = globalGetFolderList(true);
+
+// api export
+module.exports = {
+  getUserPreferences() {
+    return userPre;
   },
-  newFolder(workPath, params) {
+  getFolderList() {
+    return globalGetFolderList(false);
+  },
+  newFolder(params) {
     const newId = uuid.v1();
     const createTime = new Date().getTime();
-    fs.ensureDirSync(path.join(workPath, 'folder'));
-    fs.writeJSONSync(path.join(workPath, `folder/folder-${newId}.json`), {
+    const { folder } = params;
+    let folderPath = 'folder';
+    if (folder !== 0) {
+      folderPath = pathMap.get(folder);
+    }
+    const newPath = `${folderPath}/${newId}`;
+    folderMap.set(newId, folder);
+    pathMap.set(newId, newPath);
+    fs.ensureDirSync(getFilePath(newPath));
+    fs.writeJSONSync(getFilePath(`${folderPath}/${newId}/_folder.json`), {
       ...params,
+      id: newId,
       createTime,
       updateTime: createTime,
     });
+    return 200;
   },
 };

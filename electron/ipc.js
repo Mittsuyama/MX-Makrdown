@@ -4,16 +4,20 @@ const { ipcMain } = require('electron');
 module.exports = {
   main() {
     const userPre = api.getUserPreferences();
-    const { pathname: workPath } = userPre;
-    const folderList = api.getFolderList(workPath);
+    const folderList = api.getFolderList();
 
     ipcMain.on('getUserPreferences', (event, arg) => {
       event.returnValue = userPre;
     });
 
     ipcMain.on('newFolder', (event, arg) => {
-      api.newFolder(workPath, arg);
-      event.returnValue = 200;
+      const result = api.newFolder(arg);
+      event.returnValue = result;
+    });
+
+    ipcMain.on('getFolderList', (event, arg) => {
+      const result = api.getFolderList();
+      event.returnValue = result;
     });
   },
 };
