@@ -2,14 +2,14 @@ const { remote, ipcRenderer } = window.require('electron');
 const { Menu, MenuItem } = remote;
 
 export default (props: any) => {
-  const { newFolder } = props;
+  const { newFolder, moveToTrash, rename, id } = props;
   const menu = new Menu();
   menu.append(
     new MenuItem({
       label: '新建子文件夹',
       type: 'normal',
       click() {
-        newFolder();
+        newFolder(id);
       },
     }),
   );
@@ -29,14 +29,29 @@ export default (props: any) => {
     new MenuItem({
       label: '移动到废纸篓',
       type: 'normal',
-      click() {},
+      click() {
+        moveToTrash(id);
+      },
     }),
   );
   menu.append(
     new MenuItem({
       label: '重命名',
       type: 'normal',
-      click() {},
+      click() {
+        rename(id);
+      },
+    }),
+  );
+  menu.append(
+    new MenuItem({
+      type: 'separator',
+    }),
+  );
+  menu.append(
+    new MenuItem({
+      label: `文件夹 ID: ${id}`,
+      type: 'normal',
     }),
   );
   menu.append(

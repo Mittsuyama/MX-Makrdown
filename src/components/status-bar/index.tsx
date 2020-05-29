@@ -10,7 +10,7 @@ const statusBar = ({ dispatch, status }) => {
   return (
     <div className="status-bar-container">
       <div className="status-bar-box left">
-        <div className="function tag-container">TAGS: Computer, React</div>
+        <div className="function tag-container">Tags: Computer, React</div>
         <div className="function mod-select">VIM, NORMAL</div>
         <div className="function view-select">VIEW:</div>
         <div className="function cursor-position">

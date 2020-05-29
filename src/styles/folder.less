@@ -1,0 +1,109 @@
+.folder-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+
+  .folder-list {
+    position: relative;
+    flex-shrink: 0;
+    width: 350px;
+    height: 100%;
+    border-right: 1px solid #eee;
+    display: flex;
+    flex-direction: column;
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 18px;
+      -webkit-app-region: drag;
+    }
+
+    .head {
+      flex-shrink: 0;
+      width: 100%;
+      height: 70px;
+      padding: 0 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .input-box {
+        width: 265px;
+        height: 30px;
+        padding-right: 10px;
+        border-radius: 5px;
+        background-color: #eee;
+
+        .search {
+          margin: 0 15px;
+          font-size: 14px;
+          font-weight: bold;
+          color: #aaa;
+        }
+
+        input {
+          width: 80%;
+          height: 100%;
+          background-color: transparent;
+          border: none;
+          outline: none;
+          font-size: 15px;
+          color: #777;
+        }
+      }
+
+      .add {
+        margin-top: 2px;
+        font-size: 23px;
+        cursor: pointer;
+      }
+    }
+
+    .main {
+      -webkit-touch-callout: none;
+      user-select: none;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+
+      .doc-item {
+        border-bottom: 1px solid #eee;
+        padding: 15px 24px;
+        cursor: pointer;
+        &:hover {
+          background-color: #fbfbfb;
+        }
+
+        .title {
+          margin-bottom: 3px;
+          font-size: 17px;
+          font-weight: bold;
+          color: #444;
+        }
+
+        .text {
+          width: 100%;
+          height: 45px;
+          font-size: 14px;
+          color: #888;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          overflow: hidden;
+          /*! autoprefixer: off */
+          -webkit-box-orient: vertical;
+        }
+      }
+    }
+  }
+
+  .editor {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+}

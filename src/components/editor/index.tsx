@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { connect } from 'umi';
+import { connect, useLocation } from 'umi';
 import Codemirror from 'codemirror';
 const { templeText } = require('@/utils/constant.js');
 const { ipcRenderer } = window.require('electron');
@@ -42,35 +42,63 @@ const md = require('markdown-it')({
   .use(require('markdown-it-mark'))
   .use(require('markdown-it-underline'));
 
-const Editor = ({ dispatch }) => {
+const Editor = ({ save, status, dispatch, hiostry }) => {
   const codeRef = useRef(null);
   const readerRef = useRef(null);
   const readerContainerRef = useRef(null);
   const [codeMirror, setCodeMirror] = useState(null);
-  const [value, setValue] = useState(templeText);
+  const [value, setValue] = useState('');
   const [mousePosition, setMousePosition] = useState(0);
   const [scrollTop, setScrollTop] = useState(0);
   const [maxScreen, setMaxScren] = useState(0);
-
-  const options = {
-    value,
-    smartIndent: true,
-    lineWrapping: true,
-    keyMap: 'vim',
-    mode: 'markdown',
-  };
+  const location = useLocation();
 
   useEffect(() => {
-    dispatch({
-      type: 'status/update',
-      payload: {
-        name: /^\#\s(?<name>[^\n]+)/g.exec(templeText).groups.name,
-        font: templeText.length,
-      },
+    const {
+      folder,
+      id,
+    } = /\/folder-management\/(?<folder>[\w-]+)\/(?<id>[\w-]+)/.exec(
+      location.pathname,
+    ).groups;
+    const codeValue = value;
+    Codemirror.Vim.defineEx('w', undefined, cm => {
+      ipcRenderer.sendSync('updateDoc', { id, folder, text: cm.getValue() });
+      dispatch({
+        type: 'save/add',
+      });
     });
-  }, []);
+    if (codeMirror !== null) {
+      const result = ipcRenderer.sendSync('getDoc', { folder, id });
+      codeMirror.setValue(result.text);
+    }
+  }, [location]);
 
   useEffect(() => {
+    const {
+      folder,
+      id,
+    } = /\/folder-management\/(?<folder>[\w-]+)\/(?<id>[\w-]+)/.exec(
+      location.pathname,
+    ).groups;
+    const result = ipcRenderer.sendSync('getDoc', { folder, id });
+    // const regResult = /\#\s(?<name>[^\n]+)/g.exec(result.text);
+    // const name = regResult !== null ? regResult.groups.name : 'NEW DOCUEMTN';
+    // dispatch({
+    //   type: 'status/update',
+    //   payload: {
+    //     name,
+    //     font: result.text.length,
+    //   },
+    // });
+    setValue(result.text);
+    const options = {
+      value: result.text,
+      smartIndent: true,
+      lineWrapping: true,
+      keyMap: 'vim',
+      mode: 'markdown',
+    };
+
     if (codeRef !== null) {
       //@ts-ignore
       const codeMirror = Codemirror(codeRef.current, { ...options });
@@ -78,16 +106,16 @@ const Editor = ({ dispatch }) => {
       codeMirror.on('change', () => {
         const value = codeMirror.getValue();
         setValue(value);
-        // update status-bar
-        const { name } = /^\#\s(?<name>[^\n]+)/g.exec(value).groups;
-        const font = value.length;
-        dispatch({
-          type: 'status/update',
-          payload: {
-            name,
-            font,
-          },
-        });
+        // const regResult = /\#\s(?<name>[^\n]+)/g.exec(result.text);
+        // const name = regResult !== null ? regResult.groups.name : 'NEW DOCUEMTN';
+        // const font = value.length;
+        // dispatch({
+        //   type: 'status/update',
+        //   payload: {
+        //     name,
+        //     font,
+        //   },
+        // });
       });
       codeMirror.on('scroll', () => {
         if (mousePosition === 0) {
@@ -95,13 +123,13 @@ const Editor = ({ dispatch }) => {
           setScrollTop(top / (height - window.innerHeight));
         }
       });
-      codeMirror.on('cursorActivity', () => {
-        const { line, ch } = codeMirror.getCursor();
-        dispatch({
-          type: 'status/update',
-          payload: { cursor: { line, ch } },
-        });
-      });
+      // codeMirror.on('cursorActivity', () => {
+      //   const { line, ch } = codeMirror.getCursor();
+      //   dispatch({
+      //     type: 'status/update',
+      //     payload: { cursor: { line, ch } },
+      //   });
+      // });
     }
   }, [codeRef]);
 
@@ -143,17 +171,21 @@ const Editor = ({ dispatch }) => {
     }
   };
 
+  const { view } = status;
+
   return (
     <div className="editor-container">
       <div className="editor-head" onDoubleClick={handleHeadDoubleClick}></div>
       <div className="editor-main">
         <div
           className="codemirror"
+          style={{ width: `${(3 - view) * 50}%` }}
           ref={codeRef}
           onMouseEnter={() => setMousePosition(0)}
         />
         <div
           className="reader"
+          style={{ width: `${(view - 1) * 50}%` }}
           ref={readerRef}
           onMouseEnter={() => setMousePosition(1)}
           onScroll={readerScroll}
@@ -169,6 +201,7 @@ const Editor = ({ dispatch }) => {
   );
 };
 
-export default connect(({ status }) => ({
+export default connect(({ save, status }) => ({
+  save,
   status,
 }))(Editor);

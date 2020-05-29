@@ -52,7 +52,7 @@ export default ({ ok, changeShow, title, show }) => {
         style={dialog}
         onClick={e => e.stopPropagation()}
       >
-        <div className="title">新建文件夹</div>
+        <div className="title">{title}</div>
         <div className="input-box">
           <input ref={inputRef} onKeyUp={handleInputKeyUp} />
         </div>

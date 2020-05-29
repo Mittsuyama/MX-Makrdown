@@ -4,7 +4,7 @@ export default {
     name: '', // editor
     tag: [],
     mode: 'vim',
-    view: '2',
+    view: '1',
     time: '', // file
     font: 0, // editor
     cursor: {
