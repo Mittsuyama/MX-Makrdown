@@ -17,6 +17,7 @@ const createWindow = () => {
     },
   });
   mainWindow.loadURL('http://localhost:8000');
+  // mainWindow.loadFile(path.join(__dirname, '../build/index.html'));
 
   ipc.main();
 

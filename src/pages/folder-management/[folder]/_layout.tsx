@@ -3,11 +3,12 @@ import { connect, history } from 'umi';
 
 import '@/styles/folder.less';
 
-const { ipcRenderer } = window.require('electron');
+const { ipcRenderer, remote } = window.require('electron');
+const { Menu, MenuItem } = remote;
 
 const Layout = (props: any) => {
   const { pathname } = history.location;
-  const { children, save } = props;
+  const { children, status, save } = props;
   const { folder } = /\/folder-management\/(?<folder>[\w-]+)/.exec(pathname).groups;
 
   const [docList, setDocList] = useState([]);
@@ -33,7 +34,8 @@ const Layout = (props: any) => {
   }, [folder, save]);
 
   const handleAddDocRequest = () => {
-    ipcRenderer.sendSync('addDoc', { folder });
+    const id = ipcRenderer.sendSync('addDoc', { folder });
+    history.push(`/folder-management/${folder}/${id}`);
     fetch();
   };
 
@@ -59,7 +61,7 @@ const Layout = (props: any) => {
 
   return (
     <div className="folder-container">
-      <div className="folder-list">
+      <div className="folder-list" style={{ display: status.menu ? 'block' : 'none' }}>
         <div className="head">
           <div className="input-box">
             <i className="search iconfont icon-search" />
@@ -79,7 +81,8 @@ const Layout = (props: any) => {
   );
 };
 
-export default connect(({ save }) => ({
+export default connect(({ status, save }) => ({
+  status,
   save,
 }))(Layout);
 

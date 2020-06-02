@@ -67,9 +67,7 @@ const globalGetFolderList = (refresh = false) => {
       folderList.push(getFileLoop(`folder/${id}`));
     }
   });
-  console.log(folderList);
   folderList = folderList.sort((x, y) => x.createTime - y.createTime);
-  console.log(folderList);
   return folderList;
 };
 
@@ -152,8 +150,10 @@ module.exports = {
       tags: [],
       creatTime: newTime,
       updateTime: newTime,
-      text: '# NEW DOCUMENT \n\n',
+      text:
+        "# NEW DOCUMENT\n\n## CHAPTER 1\n\n### SECTION 1\n\nDON'T YOU WANT TO WRITE SOMETHING?",
     });
+    return newId;
   },
   getDoc(params) {
     const { folder, id } = params;

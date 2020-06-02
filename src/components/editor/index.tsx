@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { connect, useLocation } from 'umi';
 import Codemirror from 'codemirror';
+
 const { templeText } = require('@/utils/constant.js');
-const { ipcRenderer } = window.require('electron');
+const { ipcRenderer, remote } = window.require('electron');
 
 import './editor.less';
 import 'codemirror/lib/codemirror.css';
@@ -11,7 +12,7 @@ import 'codemirror/mode/markdown/markdown';
 import 'codemirror/keymap/vim';
 
 const highLightJs = require('highlight.js');
-import 'highlight.js/styles/atom-one-light.css';
+import 'highlight.js/styles/xcode.css';
 
 const md = require('markdown-it')({
   highlight: function(str: string, lang: string) {
@@ -40,6 +41,7 @@ const md = require('markdown-it')({
     marker: ':',
   })
   .use(require('markdown-it-mark'))
+  .use(require('markdown-it-multimd-table'))
   .use(require('markdown-it-underline'));
 
 const Editor = ({ save, status, dispatch, hiostry }) => {
@@ -61,12 +63,14 @@ const Editor = ({ save, status, dispatch, hiostry }) => {
       location.pathname,
     ).groups;
     const codeValue = value;
+
     Codemirror.Vim.defineEx('w', undefined, cm => {
       ipcRenderer.sendSync('updateDoc', { id, folder, text: cm.getValue() });
       dispatch({
         type: 'save/add',
       });
     });
+
     if (codeMirror !== null) {
       const result = ipcRenderer.sendSync('getDoc', { folder, id });
       codeMirror.setValue(result.text);
@@ -175,7 +179,12 @@ const Editor = ({ save, status, dispatch, hiostry }) => {
 
   return (
     <div className="editor-container">
-      <div className="editor-head" onDoubleClick={handleHeadDoubleClick}></div>
+      <div className="editor-head">
+        <div className="vacant-box" onDoubleClick={handleHeadDoubleClick}></div>
+        <div className="button-box" onClick={() => {}}>
+          <i className="iconfont icon-more" />
+        </div>
+      </div>
       <div className="editor-main">
         <div
           className="codemirror"

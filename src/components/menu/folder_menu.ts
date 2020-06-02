@@ -7,7 +7,6 @@ export default (props: any) => {
   menu.append(
     new MenuItem({
       label: '新建子文件夹',
-      type: 'normal',
       click() {
         newFolder(id);
       },
@@ -21,14 +20,12 @@ export default (props: any) => {
   menu.append(
     new MenuItem({
       label: '移动到...',
-      type: 'normal',
       click() {},
     }),
   );
   menu.append(
     new MenuItem({
       label: '移动到废纸篓',
-      type: 'normal',
       click() {
         moveToTrash(id);
       },
@@ -37,7 +34,14 @@ export default (props: any) => {
   menu.append(
     new MenuItem({
       label: '重命名',
-      type: 'normal',
+      click() {
+        rename(id);
+      },
+    }),
+  );
+  menu.append(
+    new MenuItem({
+      label: '标记为收藏',
       click() {
         rename(id);
       },
@@ -50,14 +54,12 @@ export default (props: any) => {
   );
   menu.append(
     new MenuItem({
-      label: `文件夹 ID: ${id}`,
-      type: 'normal',
+      label: `文件夹 ID: ${id.substr(0, 12) + ' ...'}`,
     }),
   );
   menu.append(
     new MenuItem({
       label: '详细信息',
-      type: 'normal',
       click() {},
     }),
   );

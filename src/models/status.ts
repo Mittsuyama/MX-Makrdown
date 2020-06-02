@@ -3,8 +3,9 @@ export default {
   state: {
     name: '', // editor
     tag: [],
+    menu: true,
     mode: 'vim',
-    view: '1',
+    view: 2,
     time: '', // file
     font: 0, // editor
     cursor: {

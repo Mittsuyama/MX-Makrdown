@@ -1,3 +1,11 @@
+h1,
+h2,
+h3,
+h4 {
+  font-family: sans-serif;
+  letter-spacing: 1px;
+}
+
 h1 {
   font-size: 30px;
   margin: 20px 0;
@@ -8,7 +16,6 @@ h1 {
 h2 {
   font-size: 25px;
   margin: 30px 0;
-  font-weight: bold;
   text-align: center;
   counter-reset: subsection;
 }
@@ -22,7 +29,6 @@ h2::before {
 h3 {
   font-size: 23px;
   margin: 20px 0;
-  font-weight: bold;
 }
 
 h3::before {
@@ -32,17 +38,21 @@ h3::before {
 }
 
 h4 {
-  font-size: 20px;
+  margin: 10px 0;
+  font-size: 18px;
   font-weight: bold;
   font-family: sans-serif;
 }
 
 p {
-  line-height: 30px;
+  line-height: 26px;
   color: #333;
+  margin: 15px 0;
 }
 
 strong {
+  font-family: sans-serif;
+  font-size: 15.5px;
   color: #000;
 }
 
@@ -66,7 +76,7 @@ ol {
 
 li {
   padding-left: 10px;
-  line-height: 26px;
+  line-height: 24px;
   color: #333;
 }
 
@@ -85,9 +95,14 @@ hr {
 blockquote {
   position: relative;
   color: #333;
-  padding: 5px 40px;
+  padding: 10px 40px;
   margin: 15px 0;
-  font-family: 'Times New Roman', Times, serif;
+  font-family: sans-serif;
+  font-style: italic;
+
+  p {
+    margin: 0;
+  }
 }
 
 blockquote::before {
@@ -102,20 +117,21 @@ blockquote::before {
 
 code {
   padding: 0.5px 8px 0.5px 8px;
-  background-color: #f0f0f0;
+  background-color: #f5f5f5;
   border-radius: 4px;
-  color: #eb5757;
+  color: #325aa0;
 }
 
 pre {
   overflow-x: auto;
-  margin: 15px 0;
-  padding: 20px;
-  border: 2px dashed #d9d9d9;
+  margin: 20px 0;
+  padding: 10px 20px;
+  border: 1px dashed #d9d9d9;
   background-color: #fbfbfb;
   border-radius: 5px;
 
   code {
+    font-size: 15px;
     padding: unset;
     background-color: unset;
     border-radius: unset;
@@ -145,4 +161,8 @@ table {
   tr:nth-child(even) {
     background: #f3f3f3;
   }
+}
+
+.katex {
+  font-size: 16px;
 }
