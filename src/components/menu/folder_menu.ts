@@ -59,6 +59,11 @@ export default (props: any) => {
   );
   menu.append(
     new MenuItem({
+      label: `复制文件夹 ID`,
+    }),
+  );
+  menu.append(
+    new MenuItem({
       label: '详细信息',
       click() {},
     }),

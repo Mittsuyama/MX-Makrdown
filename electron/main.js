@@ -1,7 +1,8 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, Menu } = require('electron');
 const path = require('path');
 
 const ipc = require('./ipc');
+const getMenu = require('./menu.js');
 
 let mainWindow;
 
@@ -20,6 +21,8 @@ const createWindow = () => {
   // mainWindow.loadFile(path.join(__dirname, '../build/index.html'));
 
   ipc.main();
+  const menu = Menu.buildFromTemplate(getMenu(mainWindow));
+  Menu.setApplicationMenu(menu);
 
   ipcMain.on('window-operation', (event, arg) => {
     if (arg === 'max-screen') {
