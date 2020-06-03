@@ -28,7 +28,7 @@ export default () => {
   });
 
   const menuList = [
-    { title: '所有文档', name: 'docuemnt', icon: 'paper' },
+    { title: '所有文档', name: 'doc', icon: 'paper' },
     { title: '所有标签', name: 'tag', icon: 'tag-o' },
     { title: '收藏文档', name: 'star', icon: 'star' },
     { title: '图片管理', name: 'iamge', icon: 'tupian' },

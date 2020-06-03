@@ -16,9 +16,16 @@ export default {
   },
   reducers: {
     update(state: any, action: any) {
+      console.log(action.payload);
       return {
         ...state,
         ...action.payload,
+      };
+    },
+    changeMenuShow(state: any, action: any) {
+      return {
+        ...state,
+        menu: !state.menu,
       };
     },
   },

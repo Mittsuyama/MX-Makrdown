@@ -2,6 +2,7 @@ const { app, Menu } = require('electron');
 
 module.exports = contents => {
   const isMac = process.platform === 'darwin';
+  contents.webContents.set;
   const template = [
     ...(isMac
       ? [
