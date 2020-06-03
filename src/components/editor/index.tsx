@@ -12,7 +12,7 @@ import 'codemirror/mode/markdown/markdown';
 import 'codemirror/keymap/vim';
 
 const highLightJs = require('highlight.js');
-import 'highlight.js/styles/xcode.css';
+import 'highlight.js/styles/github.css';
 
 const md = require('markdown-it')({
   highlight: function(str: string, lang: string) {
@@ -40,9 +40,16 @@ const md = require('markdown-it')({
   .use(require('markdown-it-container'), 'warning', {
     marker: ':',
   })
+  .use(require('markdown-it-container'), 'tag', {
+    marker: ':',
+  })
+  .use(require('markdown-it-multimd-table'), {
+    rowspan: true,
+  })
+  .use(require('markdown-it-underline'))
   .use(require('markdown-it-mark'))
-  .use(require('markdown-it-multimd-table'))
-  .use(require('markdown-it-underline'));
+  .use(require('markdown-it-kbd'))
+  .use(require('markdown-it-deflist'));
 
 const Editor = ({ save, status, dispatch, hiostry }) => {
   const codeRef = useRef(null);
@@ -175,7 +182,7 @@ const Editor = ({ save, status, dispatch, hiostry }) => {
     }
   };
 
-  const { view } = status;
+  const { view, menu } = status;
 
   return (
     <div className="editor-container">

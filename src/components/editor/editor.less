@@ -1,3 +1,15 @@
+@font-face {
+  font-family: source;
+  src: url('./source-regular.ttf') format('truetype');
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: source;
+  src: url('./source-bold.ttf') format('truetype');
+  font-weight: bold;
+}
+
 .editor-container {
   width: 100%;
   height: 100%;
@@ -45,6 +57,7 @@
 
     .codemirror {
       height: 100%;
+      padding: 0 20px;
       @import './codemirror.less';
     }
 
@@ -53,10 +66,14 @@
       overflow: auto;
 
       #reader-container {
-        padding: 0 50px;
-        font-size: 16px;
-        font-family: Georgia, 'Times New Roman', Times, serif;
         @import './reader.less';
+        max-width: 800px;
+        margin: auto;
+        padding: 20px 20px;
+        font-size: 16px;
+        line-height: 25px;
+        font-family: source, 'Times New Roman', Times, serif;
+        color: #333;
       }
     }
   }

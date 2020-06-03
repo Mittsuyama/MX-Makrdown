@@ -1,59 +1,73 @@
+@font-face {
+  font-family: hack;
+  src: url('./hack.ttf') format('truetype');
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: 'Courier New';
+  src: url('./Courier New.ttf') format('truetype');
+  font-weight: normal;
+}
+
 h1,
 h2,
 h3,
 h4 {
-  font-family: sans-serif;
-  letter-spacing: 1px;
+  font-weight: bold;
 }
 
 h1 {
   font-size: 30px;
-  margin: 20px 0;
+  margin: 30px 0;
   font-weight: bold;
   counter-reset: section;
 }
 
 h2 {
-  font-size: 25px;
+  font-size: 24px;
   margin: 30px 0;
   text-align: center;
   counter-reset: subsection;
-}
 
-h2::before {
-  counter-increment: section;
-  content: counter(section) ' ';
-  margin-right: 20px;
+  &::before {
+    counter-increment: section;
+    content: counter(section) ' ';
+    margin-right: 15px;
+  }
 }
 
 h3 {
-  font-size: 23px;
-  margin: 20px 0;
-}
+  font-size: 22px;
+  margin: 35px 0 20px 0;
+  counter-reset: paragraph;
 
-h3::before {
-  counter-increment: subsection;
-  content: counter(section) '.' counter(subsection) ' ';
-  margin-right: 20px;
+  &::before {
+    counter-increment: subsection;
+    content: counter(section) '.' counter(subsection) ' ';
+    margin-right: 20px;
+  }
 }
 
 h4 {
-  margin: 10px 0;
+  margin: 20px 0 10px 0;
   font-size: 18px;
   font-weight: bold;
-  font-family: sans-serif;
+  color: #222;
+
+  &::before {
+    counter-increment: paragraph;
+    content: counter(section) '.' counter(subsection) '.' counter(paragraph);
+    margin-right: 20px;
+  }
 }
 
 p {
-  line-height: 26px;
-  color: #333;
   margin: 15px 0;
 }
 
 strong {
-  font-family: sans-serif;
-  font-size: 15.5px;
-  color: #000;
+  color: #222;
 }
 
 em {
@@ -61,7 +75,7 @@ em {
 }
 
 a {
-  color: #4078f2;
+  color: #c0392b;
 }
 
 ul {
@@ -76,8 +90,10 @@ ol {
 
 li {
   padding-left: 10px;
-  line-height: 24px;
-  color: #333;
+
+  p {
+    margin: unset;
+  }
 }
 
 .task-list {
@@ -94,76 +110,102 @@ hr {
 
 blockquote {
   position: relative;
-  color: #333;
-  padding: 10px 40px;
-  margin: 15px 0;
-  font-family: sans-serif;
+  color: #666;
+  padding: 5px 40px;
+  margin: 10px 0;
   font-style: italic;
 
   p {
     margin: 0;
   }
-}
 
-blockquote::before {
-  content: '';
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  width: 5px;
-  height: 100%;
-  background-color: #333;
+  &::before {
+    content: '“';
+    position: absolute;
+    top: 0px;
+    left: -15px;
+    font-size: 25px;
+    color: #555;
+  }
 }
 
 code {
-  padding: 2px 8px 1px 8px;
-  background-color: #f0f0f0;
   border-radius: 4px;
-  font-family: monospace;
-  color: #666;
+  font-family: 'Courier New';
+  font-size: 16px;
+  line-height: 15px;
 }
 
 pre {
   overflow-x: auto;
   margin: 20px 0;
-  padding: 10px 20px;
-  border: 1px dashed #d9d9d9;
+  padding: 15px 20px;
+  border: 1px solid #eee;
   background-color: #fbfbfb;
   border-radius: 5px;
 
   code {
-    font-size: 15px;
     padding: unset;
     background-color: unset;
     border-radius: unset;
-    font-family: unset;
     color: unset;
   }
 }
 
 table {
-  margin: 20px 0;
-  width: 100%;
+  margin: 40px auto;
   border-collapse: collapse;
+  thead {
+    border-top: 2px solid #333;
+    border-bottom: 1px solid #333;
+  }
+  tbody {
+    border-bottom: 2px solid #333;
+  }
   td,
   th {
-    border: 1px solid #ccc;
     padding: 0 10px;
     height: 35px;
   }
-  thead th {
-    background-color: white;
-    width: 100px;
-  }
-  tr:nth-child(odd) {
-    background: white;
+}
+
+mark {
+  color: unset;
+  padding: 0 5px;
+  background-color: #fefad4;
+}
+
+dl {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+
+  dt {
+    flex-shrink: 0;
+    font-weight: bold;
+    width: 20%;
   }
 
-  tr:nth-child(even) {
-    background: #f3f3f3;
+  dd {
+    flex-shrink: 0;
+    padding-left: 20px;
+    width: 80%;
   }
 }
 
+kbd {
+  padding: 2px 5px;
+  margin: 0 3px;
+  border-radius: 3px;
+  background-color: #f5f5f5;
+  box-shadow: 0 1.5px 1px 1px #00000033;
+  font-size: 14px;
+}
+
 .katex {
-  font-size: 16px;
+  font-size: 18px;
+
+  .newline {
+    height: 15px;
+  }
 }

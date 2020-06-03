@@ -5,7 +5,7 @@ export default {
     tag: [],
     menu: true,
     mode: 'vim',
-    view: 2,
+    view: 1,
     time: '', // file
     font: 0, // editor
     cursor: {
@@ -16,7 +16,6 @@ export default {
   },
   reducers: {
     update(state: any, action: any) {
-      console.log(action.payload);
       return {
         ...state,
         ...action.payload,
