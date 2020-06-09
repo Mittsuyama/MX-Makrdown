@@ -47,6 +47,7 @@ const md = require('markdown-it')({
     rowspan: true,
   })
   .use(require('markdown-it-underline'))
+  .use(require('markdown-it-plantuml'))
   .use(require('markdown-it-mark'))
   .use(require('markdown-it-kbd'))
   .use(require('markdown-it-deflist'));

@@ -1,32 +1,38 @@
 @font-face {
-  font-family: hack;
-  src: url('./hack.ttf') format('truetype');
+  font-family: 'Courier New';
+  src: url('./Courier New.ttf') format('truetype');
   font-weight: normal;
 }
 
 @font-face {
-  font-family: 'Courier New';
-  src: url('./Courier New.ttf') format('truetype');
-  font-weight: normal;
+  font-family: hack;
+  src: url('./hack.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: cascadia;
+  src: url('./cascadia.ttf') format('truetype');
 }
 
 h1,
 h2,
 h3,
 h4 {
-  font-weight: bold;
+  font-family: 'source bold';
 }
 
 h1 {
-  font-size: 30px;
   margin: 30px 0;
+  line-height: 40px;
+  font-size: 30px;
   font-weight: bold;
   counter-reset: section;
 }
 
 h2 {
-  font-size: 24px;
   margin: 30px 0;
+  line-height: 40px;
+  font-size: 24px;
   text-align: center;
   counter-reset: subsection;
 
@@ -38,8 +44,9 @@ h2 {
 }
 
 h3 {
-  font-size: 22px;
   margin: 35px 0 20px 0;
+  line-height: 45px;
+  font-size: 22px;
   counter-reset: paragraph;
 
   &::before {
@@ -51,6 +58,7 @@ h3 {
 
 h4 {
   margin: 20px 0 10px 0;
+  line-height: 30px;
   font-size: 18px;
   font-weight: bold;
   color: #222;
@@ -67,6 +75,7 @@ p {
 }
 
 strong {
+  font-family: 'source bold';
   color: #222;
 }
 
@@ -113,7 +122,6 @@ blockquote {
   color: #666;
   padding: 5px 40px;
   margin: 10px 0;
-  font-style: italic;
 
   p {
     margin: 0;
@@ -131,9 +139,8 @@ blockquote {
 
 code {
   border-radius: 4px;
-  font-family: 'Courier New';
-  font-size: 16px;
-  line-height: 15px;
+  font-family: 'courier new';
+  // -webkit-font-smoothing: antialiased;
 }
 
 pre {
@@ -182,7 +189,7 @@ dl {
 
   dt {
     flex-shrink: 0;
-    font-weight: bold;
+    font-family: 'source bold';
     width: 20%;
   }
 
@@ -191,6 +198,12 @@ dl {
     padding-left: 20px;
     width: 80%;
   }
+}
+
+img {
+  position: relative;
+  display: block;
+  margin: 20px auto;
 }
 
 kbd {
