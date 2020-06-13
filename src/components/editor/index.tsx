@@ -25,7 +25,6 @@ const md = require('markdown-it')({
         );
       } catch (__) {}
     }
-
     return (
       '<pre class="highLightJs"><code>' +
       md.utils.escapeHtml(str) +
@@ -93,15 +92,6 @@ const Editor = ({ save, status, dispatch, hiostry }) => {
       location.pathname,
     ).groups;
     const result = ipcRenderer.sendSync('getDoc', { folder, id });
-    // const regResult = /\#\s(?<name>[^\n]+)/g.exec(result.text);
-    // const name = regResult !== null ? regResult.groups.name : 'NEW DOCUEMTN';
-    // dispatch({
-    //   type: 'status/update',
-    //   payload: {
-    //     name,
-    //     font: result.text.length,
-    //   },
-    // });
     setValue(result.text);
     const options = {
       value: result.text,
@@ -118,16 +108,6 @@ const Editor = ({ save, status, dispatch, hiostry }) => {
       codeMirror.on('change', () => {
         const value = codeMirror.getValue();
         setValue(value);
-        // const regResult = /\#\s(?<name>[^\n]+)/g.exec(result.text);
-        // const name = regResult !== null ? regResult.groups.name : 'NEW DOCUEMTN';
-        // const font = value.length;
-        // dispatch({
-        //   type: 'status/update',
-        //   payload: {
-        //     name,
-        //     font,
-        //   },
-        // });
       });
       codeMirror.on('scroll', () => {
         if (mousePosition === 0) {
@@ -135,13 +115,6 @@ const Editor = ({ save, status, dispatch, hiostry }) => {
           setScrollTop(top / (height - window.innerHeight));
         }
       });
-      // codeMirror.on('cursorActivity', () => {
-      //   const { line, ch } = codeMirror.getCursor();
-      //   dispatch({
-      //     type: 'status/update',
-      //     payload: { cursor: { line, ch } },
-      //   });
-      // });
     }
   }, [codeRef]);
 
