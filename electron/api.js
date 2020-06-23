@@ -52,7 +52,7 @@ const globalGetFolderList = (refresh = false) => {
       }
     });
 
-    children = children.sort((x, y) => x.createTime - y.createTime);
+    children.sort((x, y) => x.createTime - y.createTime);
     const result = {
       ...info,
       children,
@@ -67,7 +67,7 @@ const globalGetFolderList = (refresh = false) => {
       folderList.push(getFileLoop(`folder/${id}`));
     }
   });
-  folderList = folderList.sort((x, y) => x.createTime - y.createTime);
+  folderList.sort((x, y) => x.createTime - y.createTime);
   return folderList;
 };
 
@@ -138,6 +138,7 @@ module.exports = {
         docList.push(fs.readJSONSync(`${folderPath}/${id}`));
       }
     });
+    docList.sort((x, y) => y.createTime - x.createTime);
     return docList;
   },
   addDoc(params) {
@@ -148,7 +149,7 @@ module.exports = {
       id: newId,
       folder,
       tags: [],
-      creatTime: newTime,
+      createTime: newTime,
       updateTime: newTime,
       text:
         "# NEW DOCUMENT\n\n## CHAPTER 1\n\n### SECTION 1\n\nDON'T YOU WANT TO WRITE SOMETHING?",

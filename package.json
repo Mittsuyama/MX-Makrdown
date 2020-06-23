@@ -51,6 +51,7 @@
     "markdown-it-kbd": "^2.0.0",
     "markdown-it-mark": "^3.0.0",
     "markdown-it-multimd-table": "^4.0.2",
+    "markdown-it-plantuml": "^1.4.1",
     "markdown-it-task-checkbox": "^1.0.6",
     "markdown-it-texmath": "^0.6.7",
     "markdown-it-underline": "^1.0.1",

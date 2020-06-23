@@ -61,19 +61,24 @@ const Layout = (props: any) => {
 
   return (
     <div className="folder-container">
-      <div className="folder-list" style={{ display: status.menu ? 'block' : 'none' }}>
-        <div className="head">
-          <div className="input-box">
-            <i className="search iconfont icon-search" />
-            <input placeholder="搜索文档" />
+      <div
+        className="folder-list-box"
+        style={{ display: status.menu ? 'block' : 'none' }}
+      >
+        <div className="folder-list">
+          <div className="head">
+            <div className="input-box">
+              <i className="search iconfont icon-search" />
+              <input placeholder="搜索文档" />
+            </div>
+            <i
+              className="add iconfont icon-tianjiawenjian"
+              onClick={() => handleAddDocRequest()}
+            />
           </div>
-          <i
-            className="add iconfont icon-tianjiawenjian"
-            onClick={() => handleAddDocRequest()}
-          />
-        </div>
-        <div className="main">
-          {docList.map(item => docItemRedender(item))}
+          <div className="main">
+            {docList.map(item => docItemRedender(item))}
+          </div>
         </div>
       </div>
       <div className="editor">{ children }</div>

@@ -52,13 +52,12 @@ const md = require('markdown-it')({
   .use(require('markdown-it-deflist'));
 
 const Editor = ({ save, status, dispatch, hiostry }) => {
+  const windowInnerHeight = window.innerHeight - 30;
   const codeRef = useRef(null);
   const readerRef = useRef(null);
   const readerContainerRef = useRef(null);
   const [codeMirror, setCodeMirror] = useState(null);
   const [value, setValue] = useState('');
-  const [mousePosition, setMousePosition] = useState(0);
-  const [scrollTop, setScrollTop] = useState(0);
   const [maxScreen, setMaxScren] = useState(0);
   const location = useLocation();
 
@@ -83,6 +82,24 @@ const Editor = ({ save, status, dispatch, hiostry }) => {
       codeMirror.setValue(result.text);
     }
   }, [location]);
+
+  const handleEditorScroll = (scrollRate: number) => {
+    if (codeMirror !== null) {
+      //@ts-ignore
+      const { height } = codeMirror.getScrollInfo();
+      //@ts-ignore
+      codeMirror.scrollTo(0, scrollRate * (height + 50 - windowInnerHeight));
+    }
+  };
+
+  const handleReaderScroll = (scrollRate: number) => {
+    const reader: any = readerRef.current;
+    const container: any = readerContainerRef.current;
+    reader.scrollTo(
+      0,
+      (container.offsetHeight - windowInnerHeight) * scrollRate,
+    );
+  };
 
   useEffect(() => {
     const {
@@ -110,41 +127,31 @@ const Editor = ({ save, status, dispatch, hiostry }) => {
         setValue(value);
       });
       codeMirror.on('scroll', () => {
-        if (mousePosition === 0) {
-          const { top, height } = codeMirror.getScrollInfo();
-          setScrollTop(top / (height - window.innerHeight));
-        }
+        const { top, height } = codeMirror.getScrollInfo();
+        handleReaderScroll(top / (height + 50 - windowInnerHeight));
       });
     }
   }, [codeRef]);
 
+  /*
   useEffect(() => {
     if (mousePosition === 0) {
       const reader: any = readerRef.current;
       const container: any = readerContainerRef.current;
       reader.scrollTo(
         0,
-        (container.offsetHeight - window.innerHeight) * scrollTop,
+        (container.offsetHeight - windowInnerHeight) * scrollTop,
       );
     } else {
       if (codeMirror !== null) {
         //@ts-ignore
         const { height } = codeMirror.getScrollInfo();
         //@ts-ignore
-        codeMirror.scrollTo(0, scrollTop * (height - window.innerHeight));
+        codeMirror.scrollTo(0, scrollTop * (height + 50 - windowInnerHeight));
       }
     }
   }, [scrollTop]);
-
-  const readerScroll = (event: any) => {
-    if (mousePosition === 1) {
-      const el: any = event.target;
-      const container: any = readerContainerRef.current;
-      const { offsetHeight } = container;
-      const { scrollTop } = el;
-      setScrollTop(scrollTop / (offsetHeight - window.innerHeight));
-    }
-  };
+  */
 
   const handleHeadDoubleClick = (event: any) => {
     if (maxScreen === 0) {
@@ -154,6 +161,13 @@ const Editor = ({ save, status, dispatch, hiostry }) => {
       const _ = ipcRenderer.sendSync('window-operation', 'un-max-screen');
       setMaxScren(0);
     }
+  };
+
+  const handleReaderWheel = () => {
+    const { scrollTop } = readerRef.current;
+    const { offsetHeight } = readerContainerRef.current;
+    const scrollRate = scrollTop / (offsetHeight - windowInnerHeight);
+    handleEditorScroll(scrollRate);
   };
 
   const { view, menu } = status;
@@ -171,14 +185,12 @@ const Editor = ({ save, status, dispatch, hiostry }) => {
           className="codemirror"
           style={{ width: `${(3 - view) * 50}%` }}
           ref={codeRef}
-          onMouseEnter={() => setMousePosition(0)}
         />
         <div
           className="reader"
           style={{ width: `${(view - 1) * 50}%` }}
           ref={readerRef}
-          onMouseEnter={() => setMousePosition(1)}
-          onScroll={readerScroll}
+          onWheel={handleReaderWheel}
         >
           <div
             id="reader-container"
